@@ -4,7 +4,8 @@
 
 New Year's Resolution for 2017: Make a D3 Block a day to teach myself D3. This is Number 17. This example
 returns to [the USA district map](https://github.com/dbetebenner/D3_01102017) using an improved set of shape
-files that highlight the states as well as the districts. The topoJSON files used to construct this visualization were created by me using
+files that highlight the states as well as the districts. The visualization shows Alaska and Hawaii in the lower left.
+The topoJSON files used to construct this visualization were created by me using
 [shape files](https://nces.ed.gov/programs/edge/geographicDistrictBoundary.aspx) compiled by the NCES and the United States Census Bureau.
 [The Center for Assessment](https://github.com/CenterForAssessment) makes these
 [state and national school district topoJSON files](https://github.com/CenterForAssessment/SGPspatialData) available
