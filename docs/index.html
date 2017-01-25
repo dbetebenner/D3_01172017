@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<meta charset="utf-8">
+<head>
+<title>D3 Block-a-Day: Day 17, January 17, 2017</title>
+<style>
+
+#wrapper {
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+}
+
+path {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: .15px;
+}  
+
+path_state {
+  fill: #fff;
+  stroke: #000;
+  stroke-width: 1px;
+}
+  
+path:hover {
+  fill: #879baa;
+}
+
+.hidden {
+  display: none;
+}
+
+div.tooltip {
+  background-color: #fff8dc;
+  padding: 7px;
+  text-shadow: #f5f5f5 0 1px 0;
+  font: 13px Helvetica Neue;
+  border: 2.5px solid;
+  border-color: black;
+	border-radius: 3px;
+  opacity: 0.9;
+  position: absolute;
+  box-shadow: rgba(0, 0, 0, 0.3) 0 2px 10px;
+  }
+</style>
+</head>
+<body>
+<script src="//d3js.org/d3.v4.min.js"></script>
+<script src="//d3js.org/topojson.v2.min.js"></script>
+<script src="https://d3js.org/d3-array.v1.min.js"></script>
+<script src="https://d3js.org/d3-geo.v1.min.js"></script>
+
+<div id="wrapper">
+   <div id="chart"></div>
+</div>
+
+<script>
+
+  var width = 960,
+    height = 600;
+  
+  const zoom = d3.zoom()
+      .scaleExtent([1/4, 7])
+      .on('zoom', function () {
+        d3.select('g').attr('transform', d3.event.transform)
+      });
+
+  const svg = d3.select('#chart')
+      .append('svg')
+      .attr('width', width)
+      .attr('height', height)
+      .call(zoom)
+
+  const g = svg.append('g')
+  
+  var projection = d3.geoAlbersUsa()
+      .scale(1200);
+ 
+  var path = d3.geoPath()
+      .projection(projection);
+
+  var path_state = d3.geoPath()
+      .projection(projection);
+  
+  var tooltip = d3.select('#chart').append('div')
+      .attr('class', 'hidden tooltip');
+
+  d3.json("USA_Districts.topojson", function(error, state_districts) {
+  	if (error) throw error;
+
+  	g.selectAll("path")
+    	  .data(topojson.feature(state_districts, state_districts.objects.districts).features)
+		    .enter()
+		    .append("path")
+    	  .attr("d", path)
+        .on('mousemove', function(d) {
+           var mouse = d3.mouse(svg.node()).map(function(d) {
+                return parseInt(d);
+         });
+         tooltip.classed('hidden', false)
+                .attr('style', 'left:' + (mouse[0] + 10) +'px; top:' + (mouse[1] - 20) + 'px')
+                .html(d.properties.name);
+         })
+         .on('mouseout', function() {
+                tooltip.classed('hidden', true);
+         });
+
+  	g.selectAll("path")
+    	  .data(topojson.feature(state_districts, state_districts.objects.states).features)
+		    .enter()
+		    .append("path")
+    	  .attr("d", path)
+        .attr("style", "stroke-width: 1px");
+
+	});
+</script>
+</body>
